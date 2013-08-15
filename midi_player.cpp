@@ -94,7 +94,7 @@ void MIDI_PLAYER::on_Open_button_clicked()
     if (fn.isEmpty())
         return;
     ui->MidiFile_display->setText(fn);
-    ui->MIDI_length_display->setText("00:00:00");
+    ui->MIDI_length_display->setText("00:00");
     init_seq();
     queue = snd_seq_alloc_named_queue(seq, "midi_player");
     check_snd("create queue", queue);
@@ -110,7 +110,9 @@ void MIDI_PLAYER::on_Open_button_clicked()
     ui->progressBar->setTickInterval(song_length_seconds<240?10:30);
     ui->progressBar->setTickPosition(QSlider::TicksAbove);
     ui->Play_button->setEnabled(true);
-    ui->MIDI_length_display->setText(QTime(static_cast<int>(song_length_seconds/3600), static_cast<int>(song_length_seconds/60), static_cast<int>(song_length_seconds)%60).toString());
+//    ui->MIDI_length_display->setText(QTime(static_cast<int>(song_length_seconds/3600), static_cast<int>(song_length_seconds/60), static_cast<int>(song_length_seconds)%60).toString());
+//    QString x = QString::number(static_cast<int>(song_length_seconds/60)) + ":" + QString::number(static_cast<int>(song_length_seconds)%60);
+    ui->MIDI_length_display->setText(QString::number(static_cast<int>(song_length_seconds/60)).rightJustified(2,'0') + ":" + QString::number(static_cast<int>(song_length_seconds)%60).rightJustified(2,'0'));
 }   // end on_Open_button_clicked
 
 void MIDI_PLAYER::on_Play_button_toggled(bool checked)
@@ -151,7 +153,7 @@ void MIDI_PLAYER::on_Play_button_toggled(bool checked)
         ui->progressBar->blockSignals(true);
         ui->progressBar->setValue(0);
         ui->progressBar->blockSignals(false);
-        ui->MIDI_time_display->setText("00:00:00");
+        ui->MIDI_time_display->setText("00:00");
         if (ui->Pause_button->isChecked()) {
             ui->Pause_button->blockSignals(true);
             ui->Pause_button->setChecked(false);
@@ -238,17 +240,22 @@ void MIDI_PLAYER::on_PortBox_currentIndexChanged(QString buf)
 
 void MIDI_PLAYER::on_progressBar_valueChanged(int value)
 {
-    // reset queue position:
-    // new values of both real-time and tick values must be given.
-//    snd_seq_event_t tmpev;
-    snd_seq_timestamp_t *rtime;
+    // reset queue position
+    if (ui->Play_button->isChecked() && !ui->Pause_button->isChecked())
+        return;
+    if (ui->Play_button->isChecked())
+        return;
+    if (!seq)
+        return;
+    if (!queue)
+        return;
+//    ui->MIDI_time_display->setText(QTime(value/3600,value/60,value%60).toString());
+    ui->MIDI_time_display->setText(QString::number(value/60).rightJustified(2,'0') +":"+QString::number(value%60).rightJustified(2,'0'));
+    // new values of both real-time and tick values must be given?
+    snd_seq_timestamp_t *rtime = NULL;
     snd_seq_event_t ev;
     snd_seq_ev_clear(&ev);
-//    if (ev == NULL) {
-//         snd_seq_ev_clear(&tmpev);
-//         ev = &tmpev;
          snd_seq_ev_set_direct(&ev);
-//    }
     // stop the timer
     int result = snd_seq_stop_queue(seq, queue, &ev);
     // reset queue position
@@ -457,7 +464,8 @@ void MIDI_PLAYER::tickDisplay() {
 
     current_tick = snd_seq_queue_status_get_tick_time(status);
     current_time = snd_seq_queue_status_get_real_time(status);
-    ui->MIDI_time_display->setText(QTime(current_time->tv_sec/3600,current_time->tv_sec/60,current_time->tv_sec%60).toString());
+//    ui->MIDI_time_display->setText(QTime(current_time->tv_sec/3600,current_time->tv_sec/60,current_time->tv_sec%60).toString());
+    ui->MIDI_time_display->setText(QString::number(current_time->tv_sec/60).rightJustified(2,'0')+":"+QString::number(current_time->tv_sec%60).rightJustified(2,'0'));
     ui->progressBar->blockSignals(true);
 //    ui->progressBar->setValue(static_cast<int>(current_tick));
     ui->progressBar->setValue(current_time->tv_sec);
