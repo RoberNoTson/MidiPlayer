@@ -106,7 +106,9 @@ void MIDI_PLAYER::on_Open_button_clicked()
         return;
     }   // parseFile
     qDebug() << "last tick: " << all_events.back().tick;
-    ui->progressBar->setRange(0,all_events.back().tick-1);
+    ui->progressBar->setRange(0,song_length_seconds);
+    ui->progressBar->setTickInterval(song_length_seconds<240?10:30);
+    ui->progressBar->setTickPosition(QSlider::TicksAbove);
     ui->Play_button->setEnabled(true);
     ui->MIDI_length_display->setText(QTime(static_cast<int>(song_length_seconds/3600), static_cast<int>(song_length_seconds/60), static_cast<int>(song_length_seconds)%60).toString());
 }   // end on_Open_button_clicked
@@ -146,7 +148,9 @@ void MIDI_PLAYER::on_Play_button_toggled(bool checked)
             disconnect(timer, SIGNAL(timeout()), this, SLOT(tickDisplay()));
             timer->stop();
         }
-        ui->progressBar->reset();
+        ui->progressBar->blockSignals(true);
+        ui->progressBar->setValue(0);
+        ui->progressBar->blockSignals(false);
         ui->MIDI_time_display->setText("00:00:00");
         if (ui->Pause_button->isChecked()) {
             ui->Pause_button->blockSignals(true);
@@ -230,6 +234,33 @@ void MIDI_PLAYER::on_PortBox_currentIndexChanged(QString buf)
     disconnect_port();
     getPorts(buf);
     connect_port();
+}
+
+void MIDI_PLAYER::on_progressBar_valueChanged(int value)
+{
+    // reset queue position:
+    // new values of both real-time and tick values must be given.
+//    snd_seq_event_t tmpev;
+    snd_seq_timestamp_t *rtime;
+    snd_seq_event_t ev;
+    snd_seq_ev_clear(&ev);
+//    if (ev == NULL) {
+//         snd_seq_ev_clear(&tmpev);
+//         ev = &tmpev;
+         snd_seq_ev_set_direct(&ev);
+//    }
+    // stop the timer
+    int result = snd_seq_stop_queue(seq, queue, &ev);
+    // reset queue position
+    rtime->time.tv_sec = value;
+    rtime->time.tv_nsec = 0;
+    snd_seq_ev_set_queue_pos_real(&ev, queue, &rtime->time);
+    result = snd_seq_event_output(seq, &ev);
+//    snd_seq_ev_set_queue_pos_tick(ev, queue, rtime->tick);
+//    result = snd_seq_event_output(seq, ev);
+    // continue the timer
+    result = snd_seq_continue_queue(seq, queue, &ev);
+    snd_seq_drain_output(seq);
 }
 
 //  FUNCTIONS
@@ -427,10 +458,12 @@ void MIDI_PLAYER::tickDisplay() {
     current_tick = snd_seq_queue_status_get_tick_time(status);
     current_time = snd_seq_queue_status_get_real_time(status);
     ui->MIDI_time_display->setText(QTime(current_time->tv_sec/3600,current_time->tv_sec/60,current_time->tv_sec%60).toString());
-    ui->progressBar->setValue(static_cast<int>(current_tick));
+    ui->progressBar->blockSignals(true);
+//    ui->progressBar->setValue(static_cast<int>(current_tick));
+    ui->progressBar->setValue(current_time->tv_sec);
+    ui->progressBar->blockSignals(false);
     if (current_tick >= all_events.back().tick) {
         sleep(1);
         ui->Play_button->setChecked(false);
 }
 }   // end tickDisplay
-

@@ -75,6 +75,7 @@ private:
     void getRawDev(QString buf="");
 
 private slots:
+    void on_progressBar_valueChanged(int value);
     void on_PortBox_currentIndexChanged(QString );
     void on_Pause_button_toggled(bool checked);
     void on_Play_button_toggled(bool checked);
