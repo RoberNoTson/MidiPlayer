@@ -110,8 +110,6 @@ void MIDI_PLAYER::on_Open_button_clicked()
     ui->progressBar->setTickInterval(song_length_seconds<240?10:30);
     ui->progressBar->setTickPosition(QSlider::TicksAbove);
     ui->Play_button->setEnabled(true);
-//    ui->MIDI_length_display->setText(QTime(static_cast<int>(song_length_seconds/3600), static_cast<int>(song_length_seconds/60), static_cast<int>(song_length_seconds)%60).toString());
-//    QString x = QString::number(static_cast<int>(song_length_seconds/60)) + ":" + QString::number(static_cast<int>(song_length_seconds)%60);
     ui->MIDI_length_display->setText(QString::number(static_cast<int>(song_length_seconds/60)).rightJustified(2,'0') + ":" + QString::number(static_cast<int>(song_length_seconds)%60).rightJustified(2,'0'));
 }   // end on_Open_button_clicked
 
@@ -236,7 +234,7 @@ void MIDI_PLAYER::on_PortBox_currentIndexChanged(QString buf)
     disconnect_port();
     getPorts(buf);
     connect_port();
-}
+}	// end on_PortBox_currentIndexChanged
 
 void MIDI_PLAYER::on_progressBar_valueChanged(int value)
 {
@@ -268,7 +266,7 @@ void MIDI_PLAYER::on_progressBar_valueChanged(int value)
     // continue the timer
     result = snd_seq_continue_queue(seq, queue, &ev);
     snd_seq_drain_output(seq);
-}
+}	// end on_progressBar_valueChanged
 
 //  FUNCTIONS
 void MIDI_PLAYER::send_data(char * buf,int data_size) {
@@ -355,8 +353,8 @@ void MIDI_PLAYER::disconnect_port() {
             return;
         }
         err = snd_seq_disconnect_to(seq, 0, ports[0].client, ports[0].port);
-        if (err < 0 )
-            QMessageBox::critical(this, "MIDI Player", QString("%4 Cannot disconnect from port %1:%2 - %3") .arg(ports[0].client) .arg(ports[0].port) .arg(strerror(errno)) .arg(err));
+//        if (err < 0 )
+//            QMessageBox::critical(this, "MIDI Player", QString("%4 Cannot disconnect from port %1:%2 - %3") .arg(ports[0].client) .arg(ports[0].port) .arg(strerror(errno)) .arg(err));
         qDebug() << "Disconnected current port" << port_name;
     }   // end if seq
 }   // end disconnect_port
