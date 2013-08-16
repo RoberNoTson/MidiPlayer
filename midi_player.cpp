@@ -459,13 +459,10 @@ void MIDI_PLAYER::tickDisplay() {
     static unsigned int current_tick = 0;
     static const snd_seq_real_time_t *current_time;
     snd_seq_get_queue_status(seq, queue, status);
-
     current_tick = snd_seq_queue_status_get_tick_time(status);
     current_time = snd_seq_queue_status_get_real_time(status);
-//    ui->MIDI_time_display->setText(QTime(current_time->tv_sec/3600,current_time->tv_sec/60,current_time->tv_sec%60).toString());
     ui->MIDI_time_display->setText(QString::number(current_time->tv_sec/60).rightJustified(2,'0')+":"+QString::number(current_time->tv_sec%60).rightJustified(2,'0'));
     ui->progressBar->blockSignals(true);
-//    ui->progressBar->setValue(static_cast<int>(current_tick));
     ui->progressBar->setValue(current_time->tv_sec);
     ui->progressBar->blockSignals(false);
     if (current_tick >= all_events.back().tick) {
