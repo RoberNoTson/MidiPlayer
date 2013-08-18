@@ -411,7 +411,7 @@ void MIDI_PLAYER::getPorts(QString buf) {
                 ui->PortBox->blockSignals(true);
                 ui->PortBox->insertItem(9999, snd_seq_port_info_get_name(pinfo));
                 ui->PortBox->blockSignals(false);
-                printf("port: %s\n",snd_seq_port_info_get_name(pinfo));
+                qDebug() << "port:" << snd_seq_port_info_get_name(pinfo);
             }
             else if (buf.toAscii().data() == QString(snd_seq_port_info_get_name(pinfo))) {
                 QString holdit = QString::number(snd_seq_port_info_get_client(pinfo)) + ":" + QString::number(snd_seq_port_info_get_port(pinfo));

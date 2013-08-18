@@ -11,3 +11,4 @@ SOURCES += midi_player.cpp \
     file_parser.cpp
 HEADERS += midi_player.h
 FORMS += midi_player.ui
+DEFINES += QT_NO_DEBUG_OUTPUT
