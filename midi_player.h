@@ -50,6 +50,7 @@ private:
     static double song_length_seconds;
     static bool minor_key;
     static int sf;  // sharps/flats
+    static double BPM,PPQ;
 
     std::vector<struct event> all_events;
     QTimer *timer;
@@ -75,7 +76,9 @@ private:
     void getRawDev(QString buf="");
 
 private slots:
-    void on_progressBar_valueChanged(int value);
+    void on_progressBar_sliderReleased();
+    void on_progressBar_sliderPressed();
+//    void on_progressBar_valueChanged(int value);
     void on_PortBox_currentIndexChanged(QString );
     void on_Pause_button_toggled(bool checked);
     void on_Play_button_toggled(bool checked);

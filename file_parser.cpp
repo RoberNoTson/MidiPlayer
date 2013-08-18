@@ -26,11 +26,11 @@
 
 bool MIDI_PLAYER::minor_key=false;
 int MIDI_PLAYER::sf=0;  // 0=Cmajor, <0 = #flats, >0 = #sharps
+double MIDI_PLAYER::BPM=0,MIDI_PLAYER::PPQ=0;
 int smpte_timing;
 int file_offset;
 int prev_tick;
 FILE *file;
-double BPM=0,PPQ=0;
 
 // helper functions, most are INLINE
 int MIDI_PLAYER::read_id(void) {
