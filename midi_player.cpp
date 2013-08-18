@@ -130,22 +130,28 @@ void MIDI_PLAYER::on_Play_button_toggled(bool checked)
             return;
         }   // parseFile
         qDebug() << "last tick: " << all_events.back().tick;
-        pid=fork();
+/*        pid=fork();
         if (!pid) {
             play_midi();
             exit(EXIT_SUCCESS);
         }   // end pid fork
+*/
+        int err = snd_seq_start_queue(seq, queue, NULL);
+        check_snd("start queue", err);  // queue won't actually start until it is drained
+        startPlayer(0);
         connect(timer, SIGNAL(timeout()), this, SLOT(tickDisplay()));
         timer->start(200);
     }
     else {
         snd_seq_stop_queue(seq,queue,NULL);
         snd_seq_drain_output(seq);
-        if (pid) {
+/*        if (pid) {
             kill(pid,SIGKILL);
             waitpid(pid,NULL,0);
         }
         pid = 0;
+*/
+        stopPlayer();
         disconnect_port();
         if (timer->isActive()) {
             disconnect(timer, SIGNAL(timeout()), this, SLOT(tickDisplay()));
@@ -247,11 +253,13 @@ void MIDI_PLAYER::on_progressBar_sliderPressed()
     if (timer->isActive()) timer->stop();
     snd_seq_stop_queue(seq,queue,NULL);
     snd_seq_drain_output(seq);
+    stopPlayer();
+    // clear the queue
+
 }   // end on_progressBar_sliderPressed
 
 void MIDI_PLAYER::on_progressBar_sliderReleased()
 {
-//    ui->MIDI_time_display->setText(QString::number(ui->progressBar->sliderPosition()/60).rightJustified(2,'0') +":"+QString::number(ui->progressBar->sliderPosition()%60).rightJustified(2,'0'));
     snd_seq_event_t ev;
     snd_seq_ev_clear(&ev);
     snd_seq_ev_set_direct(&ev);
@@ -282,10 +290,11 @@ void MIDI_PLAYER::on_progressBar_sliderReleased()
     new_time->tv_nsec = 0;
     snd_seq_ev_set_queue_pos_real(&ev, queue, new_time);
     // continue the timer
-    snd_seq_continue_queue(seq, queue, NULL); // Pause/Resume button will handle this
+    snd_seq_continue_queue(seq, queue, NULL);
     snd_seq_drain_output(seq);
     current_time = snd_seq_queue_status_get_real_time(status);
     qDebug() << "to tick" << ev.time.tick << "at" << new_time->tv_sec;
+    startPlayer(ev.time.tick);
     timer->start();
 }   // end on_progressBar_sliderReleased
 
@@ -492,3 +501,22 @@ void MIDI_PLAYER::tickDisplay() {
         ui->Play_button->setChecked(false);
     }
 }   // end tickDisplay
+
+void MIDI_PLAYER::startPlayer(int startTick) {
+    if (pid>0) return;
+        pid=fork();
+    if (!pid) {
+        play_midi(startTick);
+        exit(EXIT_SUCCESS);
+    }   // end pid fork
+}
+
+void MIDI_PLAYER::stopPlayer() {
+    if (pid) {
+        kill(pid,SIGKILL);
+        waitpid(pid,NULL,0);
+    }
+    pid = 0;
+    snd_seq_drop_output(seq);
+    snd_seq_drain_output(seq);
+}

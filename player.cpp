@@ -18,7 +18,7 @@ void MIDI_PLAYER::check_snd(const char *operation, int err) {
         QMessageBox::critical(this, "MIDI Player", QString("Cannot %1\n%2") .arg(operation) .arg(snd_strerror(err)));
 }
 
-void MIDI_PLAYER::play_midi(void) {
+void MIDI_PLAYER::play_midi(unsigned int startTick) {
     int end_delay = 2;
     int err;
     // set data in (snd_seq_event_t ev) and output the event
@@ -28,12 +28,13 @@ void MIDI_PLAYER::play_midi(void) {
     ev.queue = queue;
     ev.source.port = 0;
     ev.flags = SND_SEQ_TIME_STAMP_TICK;
-    err = snd_seq_start_queue(seq, queue, NULL);
-    check_snd("start queue", err);  // queue won't actually start until it is drained
+//    err = snd_seq_start_queue(seq, queue, NULL);
+//    check_snd("start queue", err);  // queue won't actually start until it is drained
     // parse each event, already in sort order by 'tick' from parse_file
     for (std::vector<event>::iterator Event=all_events.begin(); Event!=all_events.end(); ++Event)  {
-        ev.type = Event->type;
+        if (Event->tick< startTick) continue;
         ev.time.tick = Event->tick;
+        ev.type = Event->type;
         ev.dest = ports[Event->port];
         switch (ev.type) {
         case SND_SEQ_EVENT_NOTEON:

@@ -65,7 +65,7 @@ private:
     int read_smf(char *);
     int read_riff(char *);
     int read_track(int, char *);
-    void play_midi(void);
+    void play_midi(unsigned int);
     void send_data(char *, int);
     void init_seq();
     void close_seq();
@@ -74,6 +74,8 @@ private:
     int parseFile(char *);
     void getPorts(QString buf="");
     void getRawDev(QString buf="");
+    void startPlayer(int startTick=0);
+    void stopPlayer();
 
 private slots:
     void on_progressBar_sliderReleased();
