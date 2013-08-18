@@ -32,7 +32,14 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
 //    check_snd("start queue", err);  // queue won't actually start until it is drained
     // parse each event, already in sort order by 'tick' from parse_file
     for (std::vector<event>::iterator Event=all_events.begin(); Event!=all_events.end(); ++Event)  {
-        if (Event->tick< startTick) continue;
+        // skip over everything except TEMPO, CONTROLLER, PROGRAM, VELOCITY changes until startTick is reached.
+        if (Event->tick<startTick &&
+            (Event->type!=SND_SEQ_EVENT_TEMPO ||
+             Event->type!=SND_SEQ_EVENT_CONTROLLER ||
+             Event->type!=SND_SEQ_EVENT_PGMCHANGE ||
+             Event->type!=SND_SEQ_EVENT_CHANPRESS ||
+             Event->type!=SND_SEQ_EVENT_SYSEX))
+            continue;
         ev.time.tick = Event->tick;
         ev.type = Event->type;
         ev.dest = ports[Event->port];

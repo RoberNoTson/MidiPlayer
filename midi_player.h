@@ -46,7 +46,8 @@ private:
 
     static snd_seq_t *seq;
     static snd_seq_addr_t *ports;
-    static int queue;
+//    static int queue;
+    int queue;
     static double song_length_seconds;
     static bool minor_key;
     static int sf;  // sharps/flats
