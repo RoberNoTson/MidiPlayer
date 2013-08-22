@@ -1,0 +1,6 @@
+1. Download the files from github:
+  https://github.com/RoberNoTson/MidiPlayer.git
+  Use the "Download ZIP" button to make things simple.
+2. Once you have pulled a zip file, unzip it somewhere temporarily.
+3. Rum "make"
+4. There is no default installation in the make file. Just copy/link/rename the executable however you wish.
