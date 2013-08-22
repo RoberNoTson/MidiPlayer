@@ -46,7 +46,6 @@ private:
 
     static snd_seq_t *seq;
     static snd_seq_addr_t *ports;
-//    static int queue;
     int queue;
     static double song_length_seconds;
     static bool minor_key;
@@ -81,7 +80,6 @@ private:
 private slots:
     void on_progressBar_sliderReleased();
     void on_progressBar_sliderPressed();
-//    void on_progressBar_valueChanged(int value);
     void on_PortBox_currentIndexChanged(QString );
     void on_Pause_button_toggled(bool checked);
     void on_Play_button_toggled(bool checked);

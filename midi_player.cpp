@@ -34,7 +34,6 @@
 
 // STATIC vars
 snd_seq_t *MIDI_PLAYER::seq=0;
-//int MIDI_PLAYER::queue=0;
 snd_seq_addr_t *MIDI_PLAYER::ports=0;
 double MIDI_PLAYER::song_length_seconds=0;
 
@@ -108,8 +107,6 @@ void MIDI_PLAYER::on_Open_button_clicked()
         return;
     }   // parseFile
     qDebug() << "last tick: " << all_events.back().tick;
-//    ui->progressBar->setRange(0,song_length_seconds);
-//    ui->progressBar->setTickInterval(song_length_seconds<240?10:30);
     ui->progressBar->setRange(0,all_events.back().tick);
     ui->progressBar->setTickInterval(song_length_seconds<240? all_events.back().tick/song_length_seconds*10 : all_events.back().tick/song_length_seconds*30);
     ui->progressBar->setTickPosition(QSlider::TicksAbove);
@@ -148,7 +145,6 @@ void MIDI_PLAYER::on_Play_button_toggled(bool checked)
         stopPlayer();
         on_Panic_button_clicked();
         disconnect_port();
-//        close_seq();
         ui->progressBar->blockSignals(true);
         ui->progressBar->setValue(0);
         ui->progressBar->blockSignals(false);
@@ -354,7 +350,6 @@ void MIDI_PLAYER::connect_port() {
         check_snd("create port", err);
 	
         ports = (snd_seq_addr_t *)realloc(ports, sizeof(snd_seq_addr_t));
-//    snd_seq_addr_t *ports = new snd_seq_addr_t;
         err = snd_seq_parse_address(seq, &ports[0], port_name);
         if (err < 0) {
             QMessageBox::critical(this, "MIDI Player", QString("Invalid port%1\n%2") .arg(port_name) .arg(snd_strerror(err)));
@@ -371,15 +366,12 @@ void MIDI_PLAYER::disconnect_port() {
     if (seq && strlen(port_name)) {
         int err;
         ports = (snd_seq_addr_t *)realloc(ports, sizeof(snd_seq_addr_t));
-//    snd_seq_addr_t *ports = new snd_seq_addr_t;
         err = snd_seq_parse_address(seq, &ports[0], port_name);
         if (err < 0) {
             QMessageBox::critical(this, "MIDI Player", QString("Invalid port%1\n%2") .arg(port_name) .arg(snd_strerror(err)));
             return;
         }
         err = snd_seq_disconnect_to(seq, 0, ports[0].client, ports[0].port);
-//        if (err < 0 )
-//            QMessageBox::critical(this, "MIDI Player", QString("%4 Cannot disconnect from port %1:%2 - %3") .arg(ports[0].client) .arg(ports[0].port) .arg(strerror(errno)) .arg(err));
         qDebug() << "Disconnected current port" << port_name;
     }   // end if seq
 }   // end disconnect_port
@@ -482,7 +474,6 @@ void MIDI_PLAYER::getRawDev(QString buf) {
 void MIDI_PLAYER::tickDisplay() {
     // do timestamp display
     snd_seq_get_queue_status(seq, queue, status);    
-//    static unsigned int current_tick = 0;
     unsigned int current_tick = snd_seq_queue_status_get_tick_time(status);
     ui->progressBar->blockSignals(true);
     ui->progressBar->setValue(current_tick);

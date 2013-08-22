@@ -28,8 +28,6 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
     ev.queue = queue;
     ev.source.port = 0;
     ev.flags = SND_SEQ_TIME_STAMP_TICK;
-//    err = snd_seq_start_queue(seq, queue, NULL);
-//    check_snd("start queue", err);  // queue won't actually start until it is drained
     // parse each event, already in sort order by 'tick' from parse_file
     for (std::vector<event>::iterator Event=all_events.begin(); Event!=all_events.end(); ++Event)  {
         // skip over everything except TEMPO, CONTROLLER, PROGRAM, VELOCITY changes until startTick is reached.
