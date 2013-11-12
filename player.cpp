@@ -36,7 +36,8 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
              Event->type!=SND_SEQ_EVENT_CONTROLLER ||
              Event->type!=SND_SEQ_EVENT_PGMCHANGE ||
              Event->type!=SND_SEQ_EVENT_CHANPRESS ||
-             Event->type!=SND_SEQ_EVENT_SYSEX))
+             Event->type!=SND_SEQ_EVENT_SYSEX ||
+             Event->type!=SND_SEQ_EVENT_KEYSIGN))
             continue;
         ev.time.tick = Event->tick;
         ev.type = Event->type;
@@ -55,6 +56,10 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
             ev.data.control.channel = Event->data.d[0];
             ev.data.control.param = Event->data.d[1];
             ev.data.control.value = Event->data.d[2];
+            if (Event->data.d[1]==7 && Event->data.d[0]==0) {
+            }
+            if (Event->data.d[1]==11 && Event->data.d[0]==0) {
+            }
             break;
         case SND_SEQ_EVENT_PGMCHANGE:
         case SND_SEQ_EVENT_CHANPRESS:
@@ -78,6 +83,107 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
             ev.dest.port = SND_SEQ_PORT_SYSTEM_TIMER;
             ev.data.queue.queue = queue;
             ev.data.queue.param.value = Event->data.tempo;
+            break;
+        case SND_SEQ_EVENT_KEYSIGN:
+            ui->MIDI_KeySig->clear();
+            if (Event->data.d[2]) {
+                switch(Event->data.d[1]) {
+                case 0:
+                    ui->MIDI_KeySig->setText("a minor");
+                    break;
+                case 1:
+                    ui->MIDI_KeySig->setText("e minor");
+                    break;
+                case 2:
+                    ui->MIDI_KeySig->setText("b minor");
+                    break;
+                case 3:
+                    ui->MIDI_KeySig->setText("f# minor");
+                    break;
+                case 4:
+                    ui->MIDI_KeySig->setText("c# minor");
+                    break;
+                case 5:
+                    ui->MIDI_KeySig->setText("g# minor");
+                    break;
+                case 6:
+                    ui->MIDI_KeySig->setText("d# minor");
+                    break;
+                case 7:
+                    ui->MIDI_KeySig->setText("a# minor");
+                    break;
+                case 0xff:
+                    ui->MIDI_KeySig->setText("d minor");
+                    break;
+                case 0xfe:
+                    ui->MIDI_KeySig->setText("g minor");
+                    break;
+                case 0xfd:
+                    ui->MIDI_KeySig->setText("c minor");
+                    break;
+                case 0xFC:
+                    ui->MIDI_KeySig->setText("f minor");
+                    break;
+                case 0xFB:
+                    ui->MIDI_KeySig->setText("bf minor");
+                    break;
+                case 0xFA:
+                    ui->MIDI_KeySig->setText("ef minor");
+                    break;
+                case 0xF9:
+                    ui->MIDI_KeySig->setText("af minor");
+                    break;
+                }
+            }
+            else {
+                switch(Event->data.d[1]) {
+                case 0:
+                    ui->MIDI_KeySig->setText("C Major");
+                    break;
+                case 1:
+                    ui->MIDI_KeySig->setText("G Major");
+                    break;
+                case 2:
+                    ui->MIDI_KeySig->setText("D Major");
+                    break;
+                case 3:
+                    ui->MIDI_KeySig->setText("A Major");
+                    break;
+                case 4:
+                    ui->MIDI_KeySig->setText("E Major");
+                    break;
+                case 5:
+                    ui->MIDI_KeySig->setText("B Major");
+                    break;
+                case 6:
+                    ui->MIDI_KeySig->setText("F# Major");
+                    break;
+                case 7:
+                    ui->MIDI_KeySig->setText("C# Major");
+                    break;
+                case 0xFF:
+                    ui->MIDI_KeySig->setText("G# Major");
+                    break;
+                case 0xFE:
+                    ui->MIDI_KeySig->setText("F Major");
+                    break;
+                case 0xFD:
+                    ui->MIDI_KeySig->setText("Bf Major");
+                    break;
+                case 0xFC:
+                    ui->MIDI_KeySig->setText("Ef Major");
+                    break;
+                case 0xFB:
+                    ui->MIDI_KeySig->setText("Af Major");
+                    break;
+                case 0xFA:
+                    ui->MIDI_KeySig->setText("Df Major");
+                    break;
+                case 0xF9:
+                    ui->MIDI_KeySig->setText("Gf Major");
+                    break;
+                }
+            }
             break;
         default:
             QMessageBox::critical(this, "MIDI Player", QString("Invalid event type %1") .arg(ev.type));
