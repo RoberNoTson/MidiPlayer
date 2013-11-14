@@ -66,8 +66,7 @@ private:
     int read_riff(char *);
     int read_track(int, char *);
     void play_midi(unsigned int);
-    void send_CC(char *, int);
-    void send_SysEx(char *, int);
+    void send_data(char *, int);
     void init_seq();
     void close_seq();
     void connect_port();
@@ -77,6 +76,7 @@ private:
     void getRawDev(QString buf="");
     void startPlayer(int startTick=0);
     void stopPlayer();
+    void send_SysEx(char *, int);
 
 private slots:
     void on_progressBar_sliderReleased();
@@ -86,8 +86,7 @@ private slots:
     void on_Play_button_toggled(bool checked);
     void on_Panic_button_clicked();
     void on_Open_button_clicked();
-    void on_MIDI_Volume_Master_valueChanged(int);
-    void on_MIDI_Exit_button_clicked();
+    void on_MIDI_Volume_valueChanged(int);
     void tickDisplay();
 };
 

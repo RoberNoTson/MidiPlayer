@@ -1,27 +1,24 @@
 // midi_player.c
-// Function list:
-//  MIDI_PLAYER     -- constructor
-// ~MIDI_PLAYER     -- destructor
-// on_Open_button_clicked   -- SLOT
-// on_Play_button_toggled   -- SLOT
-// on_Pause_button_toggled   -- SLOT
-// on_Panic_button_clicked   -- SLOT
-// on_PortBox_currentIndexChanged   -- SLOT
-// on_progressBar_sliderPressed   -- SLOT
-// on_progressBar_sliderReleased   -- SLOT
-// on_MIDI_Volume_valueChanged   -- SLOT
-// on_MIDI_Exit_button_clicked()   -- SLOT
-// check_snd       -- INLINE
-// read_id   -- INLINE
-// send_CC
-// init_seq
-// close_seq
-// connect_port
-// disconnect_port
-// tickDisplay
-// getRawDev
-// getPorts
-// startPlayer
+/* Function list:
+ *   MIDI_PLAYER     -- constructor
+ *  ~MIDI_PLAYER     -- destructor
+ *  on_Open_button_clicked   -- SLOT
+ *  on_Play_button_clicked   -- SLOT
+ *  on_Stop_button_clicked   -- SLOT
+ *  on_Panic_button_clicked   -- SLOT
+ *  on_PortBox_currentIndexChanged   -- SLOT
+ *  on_MIDI_Volume_valueChanged   -- SLOT
+ *  check_snd       -- INLINE
+ *  send_data
+ *  send_SysEx
+ *  init_seq
+ *  close_seq
+ *  connect_port
+ *  disconnect_port
+ *  tickDisplay
+ *  getRawDev
+ *  getPorts
+*/
 
 #include "midi_player.h"
 #include "ui_midi_player.h"
@@ -65,6 +62,7 @@ MIDI_PLAYER::MIDI_PLAYER(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MIDI_PLAYER)
 {
+    setStatusBar(0);
     ui->setupUi(this);
     ui->progressBar->setEnabled(false);
     timer = new QTimer(this);
@@ -94,8 +92,6 @@ void MIDI_PLAYER::on_Open_button_clicked()
     ui->Play_button->setEnabled(false);
     ui->Pause_button->setEnabled(false);
     ui->MidiFile_display->clear();
-    ui->MIDI_KeySig->clear();
-
     disconnect_port();
     close_seq();
 
@@ -207,13 +203,13 @@ void MIDI_PLAYER::on_Panic_button_clicked()
         buf[0] = 0xb0+x;
         buf[1] = 0x7B;
         buf[2] = 00;
-        send_CC(buf,3);
+        send_data(buf,3);
         buf[0] = 0xb0+x;
         buf[1] = 0x79;
         buf[2] = 00;
-        send_CC(buf,3);
-    } // end FOR
-  } // end IF SEQ
+        send_data(buf,3);
+    }
+  }
   else {
       getRawDev(ui->PortBox->currentText());
       if (strlen(MIDI_dev)) {
@@ -302,22 +298,21 @@ void MIDI_PLAYER::on_progressBar_sliderReleased()
 }   // end on_progressBar_sliderReleased
 
 //  FUNCTIONS
-void MIDI_PLAYER::send_CC(char * buf,int data_size) {
+void MIDI_PLAYER::send_data(char * buf,int data_size) {
     snd_seq_event_t ev;
     snd_seq_ev_clear(&ev);
     ev.type = SND_SEQ_EVENT_CONTROLLER;
     ev.dest = ports[0];
-    ev.data.control.channel = buf[0];   // channel number
+    ev.data.control.channel = buf[0];
     if (data_size>1)
-      ev.data.control.param = buf[1];   // controller number
+      ev.data.control.param = buf[1];
     if (data_size==3)
-      ev.data.control.value = buf[2];   // controller value
+      ev.data.control.value = buf[2];
     snd_seq_ev_set_fixed(&ev);
     snd_seq_ev_set_direct(&ev);
     snd_seq_event_output_direct(seq, &ev);
     snd_seq_drain_output(seq);
-}   // end send_CC
-
+}   // end send_data
 void MIDI_PLAYER::send_SysEx(char * buf,int data_size) {
     on_Pause_button_toggled(true);
     snd_seq_event_t ev;
@@ -527,7 +522,7 @@ void MIDI_PLAYER::stopPlayer() {
     snd_seq_drain_output(seq);
 }
 
-void MIDI_PLAYER::on_MIDI_Volume_Master_valueChanged(int val) {
+void MIDI_PLAYER::on_MIDI_Volume_valueChanged(int val) {
     char buf[8];
     if (seq) {
       connect_port();
@@ -541,8 +536,4 @@ void MIDI_PLAYER::on_MIDI_Volume_Master_valueChanged(int val) {
       buf[7] = 0xF7;
       send_SysEx(buf, 8);
   }
-}
-
-void MIDI_PLAYER::on_MIDI_Exit_button_clicked() {
-    this->close();
 }

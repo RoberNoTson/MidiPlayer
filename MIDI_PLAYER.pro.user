@@ -67,7 +67,6 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Release</value>
    <value key="QtVersionId" type="int">0</value>
-   <value key="ToolChain" type="int">0</value>
    <value key="addQDumper" type=""></value>
    <value key="buildConfiguration" type="int">0</value>
   </valuemap>
@@ -400,14 +399,14 @@
     <value type="QString">CPU=x86_64</value>
     <value type="QString">CSHEDIT=emacs</value>
     <value type="QString">CVS_RSH=ssh</value>
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-i9w4RnS5XI,guid=7513e4b0999ec9a75d959f880000002a</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-yVKDOPWK5n,guid=45748c1f5aecfb3497f9de3a0000002b</value>
     <value type="QString">DESKTOP_SESSION=default</value>
     <value type="QString">DISPLAY=:0</value>
     <value type="QString">DM_CONTROL=/var/run/xdmctl</value>
     <value type="QString">EDITOR=/usr/bin/kwrite</value>
     <value type="QString">EXPERIMENTALLY_ALLOW_PULSE_AUDIO=1</value>
     <value type="QString">FROM_HEADER=tx.rr.com</value>
-    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-ob9GrN/S.gpg-agent:4454:1</value>
+    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-kFDRv6/S.gpg-agent:4397:1</value>
     <value type="QString">GPG_TTY=not a tty</value>
     <value type="QString">GS_LIB=/home/os2/.fonts</value>
     <value type="QString">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/os2/.gtkrc-2.0-kde4:/home/os2/.gtkrc-2.0-qtengine:/home/os2/.gtkrc-2.0:/home/os2/.kde4/share/config/gtkrc-2.0</value>
@@ -459,12 +458,12 @@
     <value type="QString">QT_PLUGIN_PATH=/home/os2/.kde4/lib64/kde4/plugins/:/usr/lib64/kde4/plugins/</value>
     <value type="QString">QT_SYSTEM_DIR=/usr/share/desktop-data</value>
     <value type="QString">SDK_HOME=/usr/lib64/jvm/java</value>
-    <value type="QString">SESSION_MANAGER=local/os2:@/tmp/.ICE-unix/4552,unix/os2:/tmp/.ICE-unix/4552</value>
+    <value type="QString">SESSION_MANAGER=local/os2:@/tmp/.ICE-unix/4495,unix/os2:/tmp/.ICE-unix/4495</value>
     <value type="QString">SHELL=/bin/bash</value>
     <value type="QString">SHLVL=1</value>
-    <value type="QString">SSH_AGENT_PID=4455</value>
+    <value type="QString">SSH_AGENT_PID=4398</value>
     <value type="QString">SSH_ASKPASS=/usr/lib64/ssh/x11-ssh-askpass</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-OSSGJvXd4362/agent.4362</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-LuMJYWld4305/agent.4305</value>
     <value type="QString">TERM=xterm</value>
     <value type="QString">TMPDIR=/tmp</value>
     <value type="QString">USER=os2</value>
@@ -476,7 +475,7 @@
     <value type="QString">XCURSOR_THEME=Oxygen_White</value>
     <value type="QString">XDG_CONFIG_DIRS=/etc/xdg</value>
     <value type="QString">XDG_DATA_DIRS=/usr/local/share:/usr/share:/etc/opt/kde3/share:/opt/kde3/share</value>
-    <value type="QString">XDG_SESSION_COOKIE=d2f223773c984c89331a62fa493ee8fd-1380474212.276838-1758889203</value>
+    <value type="QString">XDG_SESSION_COOKIE=d2f223773c984c89331a62fa493ee8fd-1375332376.650343-1711119265</value>
     <value type="QString">XDM_MANAGED=method=classic,auto</value>
     <value type="QString">XKEYSYMDB=/usr/X11R6/lib/X11/XKeysymDB</value>
     <value type="QString">XMODIFIERS=@im=local</value>
@@ -484,14 +483,14 @@
     <value type="QString">XSESSION_IS_UP=yes</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList">
-    <value type="QString">/Development/linux/qt/work/MIDI_PLAYER/MIDI_PLAYER.pro</value>
+    <value type="QString">/Development/linux/qt/work/JV1080/MIDI_PLAYER/MIDI_PLAYER.pro</value>
     <value type="QString">-spec</value>
     <value type="QString">linux-g++-64</value>
     <value type="QString">-r</value>
    </valuelist>
    <value key="abstractProcess.command" type="QString">/usr/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool">false</value>
-   <value key="abstractProcess.workingDirectory" type="QString">/Development/linux/qt/work/MIDI_PLAYER</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/Development/linux/qt/work/JV1080/MIDI_PLAYER</value>
   </valuemap>
  </data>
  <data>
@@ -505,14 +504,14 @@
     <value type="QString">CPU=x86_64</value>
     <value type="QString">CSHEDIT=emacs</value>
     <value type="QString">CVS_RSH=ssh</value>
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-i9w4RnS5XI,guid=7513e4b0999ec9a75d959f880000002a</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-yVKDOPWK5n,guid=45748c1f5aecfb3497f9de3a0000002b</value>
     <value type="QString">DESKTOP_SESSION=default</value>
     <value type="QString">DISPLAY=:0</value>
     <value type="QString">DM_CONTROL=/var/run/xdmctl</value>
     <value type="QString">EDITOR=/usr/bin/kwrite</value>
     <value type="QString">EXPERIMENTALLY_ALLOW_PULSE_AUDIO=1</value>
     <value type="QString">FROM_HEADER=tx.rr.com</value>
-    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-ob9GrN/S.gpg-agent:4454:1</value>
+    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-kFDRv6/S.gpg-agent:4397:1</value>
     <value type="QString">GPG_TTY=not a tty</value>
     <value type="QString">GS_LIB=/home/os2/.fonts</value>
     <value type="QString">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/os2/.gtkrc-2.0-kde4:/home/os2/.gtkrc-2.0-qtengine:/home/os2/.gtkrc-2.0:/home/os2/.kde4/share/config/gtkrc-2.0</value>
@@ -564,12 +563,12 @@
     <value type="QString">QT_PLUGIN_PATH=/home/os2/.kde4/lib64/kde4/plugins/:/usr/lib64/kde4/plugins/</value>
     <value type="QString">QT_SYSTEM_DIR=/usr/share/desktop-data</value>
     <value type="QString">SDK_HOME=/usr/lib64/jvm/java</value>
-    <value type="QString">SESSION_MANAGER=local/os2:@/tmp/.ICE-unix/4552,unix/os2:/tmp/.ICE-unix/4552</value>
+    <value type="QString">SESSION_MANAGER=local/os2:@/tmp/.ICE-unix/4495,unix/os2:/tmp/.ICE-unix/4495</value>
     <value type="QString">SHELL=/bin/bash</value>
     <value type="QString">SHLVL=1</value>
-    <value type="QString">SSH_AGENT_PID=4455</value>
+    <value type="QString">SSH_AGENT_PID=4398</value>
     <value type="QString">SSH_ASKPASS=/usr/lib64/ssh/x11-ssh-askpass</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-OSSGJvXd4362/agent.4362</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-LuMJYWld4305/agent.4305</value>
     <value type="QString">TERM=xterm</value>
     <value type="QString">TMPDIR=/tmp</value>
     <value type="QString">USER=os2</value>
@@ -581,7 +580,7 @@
     <value type="QString">XCURSOR_THEME=Oxygen_White</value>
     <value type="QString">XDG_CONFIG_DIRS=/etc/xdg</value>
     <value type="QString">XDG_DATA_DIRS=/usr/local/share:/usr/share:/etc/opt/kde3/share:/opt/kde3/share</value>
-    <value type="QString">XDG_SESSION_COOKIE=d2f223773c984c89331a62fa493ee8fd-1380474212.276838-1758889203</value>
+    <value type="QString">XDG_SESSION_COOKIE=d2f223773c984c89331a62fa493ee8fd-1375332376.650343-1711119265</value>
     <value type="QString">XDM_MANAGED=method=classic,auto</value>
     <value type="QString">XKEYSYMDB=/usr/X11R6/lib/X11/XKeysymDB</value>
     <value type="QString">XMODIFIERS=@im=local</value>
@@ -594,17 +593,13 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString">/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool">true</value>
-   <value key="abstractProcess.workingDirectory" type="QString">/Development/linux/qt/work/MIDI_PLAYER</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/Development/linux/qt/work/JV1080/MIDI_PLAYER</value>
   </valuemap>
  </data>
  <data>
   <variable>buildconfiguration-Release-cleanstep0</variable>
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Release</value>
-   <value key="cleanConfig" type="bool">true</value>
-   <valuelist key="makeargs" type="QVariantList">
-    <value type="QString">clean</value>
-   </valuelist>
   </valuemap>
  </data>
  <data>
