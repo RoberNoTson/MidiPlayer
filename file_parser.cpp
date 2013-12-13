@@ -206,11 +206,12 @@ invalid_format:
             skip(len);
         }   // end FOR (infinite)
         // do the actual reading of midi data from the file
-        if (!read_track(file_offset + len, file_name))
-            return 0;
+        if (!read_track(file_offset + len, file_name)) return 0;
     }   // end FOR j
+
     // sort the event vector in tick order
-    std::sort(all_events.begin(), all_events.end(), tick_comp);
+//    std::sort(all_events.begin(), all_events.end(), tick_comp);
+    std::stable_sort(all_events.begin(), all_events.end(), tick_comp);
     if (song_length_seconds == 0) {
         song_length_seconds = (60000/(BPM*PPQ)) * all_events.back().tick / 1000 ;
         qDebug() << "Song length: " << song_length_seconds;
@@ -222,13 +223,16 @@ invalid_format:
     return 1;   // good return, all data read ok
 }   // end read_smf
 
-bool MIDI_PLAYER::tick_comp(const struct event& e1, const struct event& e2) { return e1.tick<e2.tick; }
+bool MIDI_PLAYER::tick_comp(const struct event& e1, const struct event& e2) { 
+  return (e1.tick<e2.tick);
+}
+
 int MIDI_PLAYER::read_track(int track_end, char *file_name) {
 // read one complete track from the file, parse it into events
     int tick = 0;
     unsigned char last_cmd = 0;
-    unsigned char port = 0;
     struct event Event;
+    Event.port=0;
     // the current file position is after the track ID and length
     while (file_offset < track_end) {
         unsigned char cmd;
@@ -286,7 +290,6 @@ int MIDI_PLAYER::read_track(int track_end, char *file_name) {
         case 0xb:
         case 0xe:
             Event.type = cmd_type[cmd >> 4];
-            Event.port = port;
             Event.tick = tick;
             Event.data.d[0] = cmd & 0x0f;
             Event.data.d[1] = read_byte() & 0x7f;
@@ -296,7 +299,6 @@ int MIDI_PLAYER::read_track(int track_end, char *file_name) {
         case 0xc: // channel msg with 1 parameter byte
         case 0xd:
             Event.type = cmd_type[cmd >> 4];
-            Event.port = port;
             Event.tick = tick;
             Event.data.d[0] = cmd & 0x0f;
             Event.data.d[1] = read_byte() & 0x7f;
@@ -310,7 +312,6 @@ int MIDI_PLAYER::read_track(int track_end, char *file_name) {
                 if (len < 0) goto _error;
                 if (cmd == 0xf0) ++len;
                 Event.type = SND_SEQ_EVENT_SYSEX;
-                Event.port = port;
                 Event.tick = tick;
                 Event.data.length = len;
                 if (cmd == 0xf0) {
@@ -328,22 +329,20 @@ int MIDI_PLAYER::read_track(int track_end, char *file_name) {
                 len = read_var();
                 if (len < 0) goto _error;
                 switch (c) {
-                case 0x21: // port number
+                 case 0x21: // port number
                     if (len < 1) goto _error;
-                    port = read_byte();
-                    skip(len - 1);
+                    skip(len);
                     break;
-                case 0x2f: // end of track
+                 case 0x2f: // end of track
                     skip(track_end - file_offset);
                     return 1;   // this is the successful exit point, end of the track
-                case 0x51: // tempo
+                 case 0x51: // tempo
                     if (len < 3) goto _error;
                     if (smpte_timing) {
                         // SMPTE timing doesn't change
                         skip(len);
                     } else {
                         Event.type = SND_SEQ_EVENT_TEMPO;
-                        Event.port = port;
                         Event.tick = tick;
                         Event.data.tempo = read_byte() << 16;
                         Event.data.tempo |= read_byte() << 8;
@@ -358,13 +357,12 @@ int MIDI_PLAYER::read_track(int track_end, char *file_name) {
                         qDebug() << "New song_len: " << song_length_seconds;
                     }
                     break;
-                case 0x59:  // Key Signature
+                 case 0x59:  // Key Signature
                     if (len<2) goto _error;
                     sf = read_byte();
                     minor_key = read_byte();
-//                    qDebug() << "Key: " << sf << (minor_key?" minor":" Major");
                     break;
-                default: // ignore all other meta events
+                 default: // ignore all other meta events
                     skip(len);
                     break;
                 }   // end SWITCH (meta-event byte value)

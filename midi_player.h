@@ -28,7 +28,7 @@ private:
     struct event {
         struct event *next;		// linked list
         unsigned char type;		// SND_SEQ_EVENT_xxx
-        unsigned char port;		// port index
+        unsigned char port;		// port index, generally not used
         unsigned int tick;
         union {
             unsigned char d[3];	// channel and data bytes

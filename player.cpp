@@ -30,17 +30,20 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
     ev.flags = SND_SEQ_TIME_STAMP_TICK;
     // parse each event, already in sort order by 'tick' from parse_file
     for (std::vector<event>::iterator Event=all_events.begin(); Event!=all_events.end(); ++Event)  {
-        // skip over everything except TEMPO, CONTROLLER, PROGRAM, VELOCITY changes until startTick is reached.
+        // skip over everything except TEMPO, CONTROLLER, PROGRAM, ChannelPressure and SysEx changes until startTick is reached.
         if (Event->tick<startTick &&
             (Event->type!=SND_SEQ_EVENT_TEMPO ||
              Event->type!=SND_SEQ_EVENT_CONTROLLER ||
              Event->type!=SND_SEQ_EVENT_PGMCHANGE ||
              Event->type!=SND_SEQ_EVENT_CHANPRESS ||
              Event->type!=SND_SEQ_EVENT_SYSEX))
+	{
             continue;
+	}
         ev.time.tick = Event->tick;
         ev.type = Event->type;
-        ev.dest = ports[Event->port];
+//        ev.dest = ports[Event->port];
+        ev.dest = ports[0];
         switch (ev.type) {
         case SND_SEQ_EVENT_NOTEON:
         case SND_SEQ_EVENT_NOTEOFF:
@@ -82,10 +85,11 @@ void MIDI_PLAYER::play_midi(unsigned int startTick) {
         default:
             QMessageBox::critical(this, "MIDI Player", QString("Invalid event type %1") .arg(ev.type));
         }   // end SWITCH ev.type
+        // do the actual output of the event to the MIDI queue
         // this blocks when the output pool has been filled
         err = snd_seq_event_output(seq, &ev);
         check_snd("output event", err);
-    }	// end for (read loop)
+    }	// end for all_events iterator
 
     // schedule queue stop at end of song
     snd_seq_ev_set_fixed(&ev);
